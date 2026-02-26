@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SchoolPrepar{% endblock %}</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; }
+
+       
+        nav {
+            background: #1A56DB;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav .logo {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+        nav ul a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        nav ul a:hover { text-decoration: underline; }
+
+       
+        footer {
+            background: #111827;
+            color: #9CA3AF;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+    </style>
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+    {# NAVBAR #}
+    <nav>
+        <a href="{{ path('app_home') }}" class="logo">
+            SchoolPrepar
+        </a>
+        <ul>
+            <li><a href="{{ path('app_home') }}">Accueil</a></li>
+            <li><a href="{{ path('course_index') }}">Cours</a></li>
+        </ul>
+    </nav>
+
+    {# CONTENU DE LA PAGE #}
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    {# FOOTER #}
+    <footer>
+        <p> {{ "now"|date("Y") }} SchoolPrepar — IT 232 Développement Web II</p>
+    </footer>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>
