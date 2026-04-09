@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>{% block title %}SchoolPrepar{% endblock %} - Préparez votre avenir</title>
+
+    {# 1. Google Fonts provenant du template Scholar #}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    {# 2. CSS du template Scholar (Utilisation de asset() pour pointer vers /public/assets/vendor) #}
+    <link href="{{ asset('assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    
+    {# 3. Fichiers CSS additionnels du template #}
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/templatemo-scholar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+
+    {% block stylesheets %}{% endblock %}
+</head>
+<body>
+
+    
+    {# Inclusion de la barre de navigation #}
+    {% include 'front/partials/nav.html.twig' %}
+
+    <main>
+        {% block body %}{% endblock %}
+    </main>
+
+    {# Inclusion du pied de page #}
+    {% include 'front/partials/footer.html.twig' %}
+
+    {# 4. Scripts JS indispensables (Ordre important) #}
+    <script src="{{ asset('assets/vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    
+    <script src="{{ asset('assets/js/isotope.min.js') }}"></script>
+    <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('assets/js/counter.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

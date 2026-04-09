@@ -1,73 +1,63 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}SchoolPrepar{% endblock %}</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; }
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-       
-        nav {
-            background: #1A56DB;
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav .logo {
-            color: white;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-decoration: none;
-        }
-        nav ul {
-            list-style: none;
-            display: flex;
-            gap: 2rem;
-        }
-        nav ul a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        nav ul a:hover { text-decoration: underline; }
+    <title>{% block title %}SchoolPrepar - Plateforme d'orientation{% endblock %}</title>
 
-       
-        footer {
-            background: #111827;
-            color: #9CA3AF;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 4rem;
-        }
-    </style>
+    <link href="{{ asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ asset('assets/css/fontawesome.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/templatemo-scholar.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/owl.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+    
     {% block stylesheets %}{% endblock %}
 </head>
+
 <body>
+    <div id="js-preloader" class="js-preloader">
+        <div class="preloader-inner">
+            <span class="dot"></span>
+            <div class="dots"><span></span><span></span><span></span></div>
+        </div>
+    </div>
 
-    {# NAVBAR #}
-    <nav>
-        <a href="{{ path('app_home') }}" class="logo">
-            SchoolPrepar
-        </a>
-        <ul>
-            <li><a href="{{ path('app_home') }}">Accueil</a></li>
-            <li><a href="{{ path('course_index') }}">Cours</a></li>
-        </ul>
-    </nav>
+    <header class="header-area header-sticky">
+        <div class="container">
+            <nav class="main-nav">
+                <a href="{{ path('app_home') }}" class="logo"><h1>SchoolPrepar</h1></a>
+                <ul class="nav">
+                    <li class="scroll-to-section"><a href="#top" class="active">Accueil</a></li>
+                    <li class="scroll-to-section"><a href="#services">Services</a></li>
+                    <li class="scroll-to-section"><a href="{{ path('app_filiere_index') }}">Filières</a></li>
+                    <li class="scroll-to-section"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
+                    <li class="scroll-to-section"><a href="#contact">Contact</a></li>
+                </ul>   
+                <a class='menu-trigger'><span>Menu</span></a>
+            </nav>
+        </div>
+    </header>
 
-    {# CONTENU DE LA PAGE #}
-    <main>
-        {% block body %}{% endblock %}
-    </main>
+    {% block body %}{% endblock %}
 
-    {# FOOTER #}
     <footer>
-        <p> {{ "now"|date("Y") }} SchoolPrepar — IT 232 Développement Web II</p>
+        <div class="container">
+            <div class="col-lg-12">
+                <p>Copyright © {{ "now"|date("Y") }} SchoolPrepar. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
-{% block javascripts %}{% endblock %}
+    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('assets/js/isotope.min.js') }}"></script>
+    <script src="{{ asset('assets/js/owl-carousel.js') }}"></script>
+    <script src="{{ asset('assets/js/counter.js') }}"></script>
+    <script src="{{ asset('assets/js/custom.js') }}"></script>
+    {% block javascripts %}{% endblock %}
 </body>
 </html>

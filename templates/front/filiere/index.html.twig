@@ -1,0 +1,83 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}Nos Filières - SchoolPrepar{% endblock %}
+
+
+{% block body %}
+
+    {# 1. HEADER DE PAGE (Style Template Scholar) #}
+    <div class="main-banner" id="top" style="padding: 150px 0 100px; margin-bottom: 0;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="header-text">
+                        <span class="category">Orientation</span>
+                        <h2>Découvrez toutes nos filières</h2>
+                        <p>Trouvez la formation qui correspond à vos aspirations professionnelles parmi nos {{ filieres|length }} programmes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# 2. SECTION LISTE DES FILIÈRES #}
+    <section class="section courses" id="courses" style="margin-top: 0; padding-top: 80px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="section-heading">
+                        <h6>Catalogue complet</h6>
+                        <h2>Filières Disponibles</h2>
+                    </div>
+                    
+                    {# Barre de recherche stylisée #}
+                    <div class="search-bar mb-5" style="max-width: 500px; margin: 0 auto;">
+                        <input type="text" id="searchInput" class="form-control search-input" 
+                               placeholder="🔍 Rechercher une filière (ex: Informatique...)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="filiereList">
+    {% for filiere in filieres %}
+        {# col-lg-4 = 3 cartes par ligne sur PC | col-md-6 = 2 cartes sur tablette #}
+        <div class="col-lg-4 col-md-6 mb-4 filiere-item">
+            <div class="events_item">
+                <div class="thumb">
+                    {% set img_idx = (loop.index0 % 3) + 1 %}
+                    <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}">
+                        <img src="{{ asset('assets/images/course-0' ~ img_idx ~ '.jpg') }}" alt="">
+                    </a>
+                    <span class="category">{{ filiere.domaine }}</span>
+                </div>
+                <div class="down-content">
+                    <span class="author">
+                        <i class="fas fa-clock"></i> {{ filiere.duree|default('3') }} ans
+                    </span>
+                    <h4>{{ filiere.nom }}</h4>
+                    <p>{{ filiere.description|slice(0, 90) }}...</p>
+                    <div class="main-button">
+                        <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}">VOIR LE DÉTAIL</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block javascripts %}
+    {# On utilise le bloc 'javascripts' de base.html.twig pour inclure le script de recherche #}
+    <script>
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            document.querySelectorAll('.filiere-item').forEach(function(item) {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(query) ? 'block' : 'none';
+            });
+        });
+    </script>
+{% endblock %}

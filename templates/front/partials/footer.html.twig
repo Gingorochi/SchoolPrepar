@@ -1,0 +1,36 @@
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <h5>School<span style="color: var(--secondary);">Prepar</span></h5>
+                <p style="font-size:0.9rem;">
+                    Votre plateforme d'orientation et de préparation scolaire. Trouvez la filière et l'établissement qui vous correspondent.
+                </p>
+            </div>
+            <div class="col-md-2 mb-4">
+                <h5>Navigation</h5>
+                <a href="{{ path('app_home') }}">Accueil</a>
+                <a href="{{ path('app_filiere_index') }}">Filières</a>
+                <a href="{{ path('app_etablissement_index') }}">Établissements</a>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>À propos</h5>
+                <a href="#">Notre mission</a>
+                <a href="#">Contact</a>
+                <a href="#">FAQ</a>
+            </div>
+            <div class="col-md-3 mb-4">
+                <h5>Suivez-nous</h5>
+                <div class="d-flex gap-3 mt-2">
+                    <a href="#"><i class="fab fa-facebook fa-lg"></i></a>
+                    <a href="#"><i class="fab fa-twitter fa-lg"></i></a>
+                    <a href="#"><i class="fab fa-instagram fa-lg"></i></a>
+                    <a href="#"><i class="fab fa-linkedin fa-lg"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; {{ "now"|date("Y") }} SchoolPrepar — Tous droits réservés | Développé dans le cadre de IT 232</p>
+        </div>
+    </div>
+</footer>

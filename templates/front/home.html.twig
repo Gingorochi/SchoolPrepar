@@ -1,0 +1,108 @@
+{# 1. Dis à Symfony d'utiliser la mise en page globale #}
+{% extends 'base.html.twig' %}
+
+{# 2. Optionnel : Personnalise le titre de l'onglet #}
+{% block title %}Accueil - SchoolPrepar{% endblock %}
+
+
+
+
+{% block body %}
+    {# 1. MAIN BANNER #}
+    <div class="main-banner" id="top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="owl-carousel owl-banner">
+                        <div class="item item-1">
+                            <div class="header-text">
+                                <span class="category">Nos Formations</span>
+                                <h2>Préparez votre avenir avec SchoolPrepar</h2>
+                                <p>La plateforme de référence pour découvrir les filières et les meilleurs établissements du Togo.</p>
+                                <div class="buttons">
+                                    <div class="main-button"><a href="#courses">Voir les filières</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        {# Tu peux ajouter d'autres items ici #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# 2. SERVICES #}
+    <div class="services section" id="services">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="service-item">
+                        <div class="icon"><img src="{{ asset('assets/images/service-01.png') }}" alt=""></div>
+                        <div class="main-content">
+                            <h4>Diplômes d'État</h4>
+                            <p>Toutes nos filières partenaires sont reconnues par l'État et le CAMES.</p>
+                        </div>
+                    </div>
+                </div>
+                {# ... Répète pour les autres services en ajoutant asset() ... #}
+            </div>
+        </div>
+    </div>
+
+    {# 3. ABOUT US (ACCORDION) #}
+    <div class="section about-us">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 offset-lg-1">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">Comment choisir sa filière ?</button></h2>
+                            <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                                <div class="accordion-body">Explorez nos fiches détaillées par domaine : Informatique, Gestion, Santé...</div>
+                            </div>
+                        </div>
+                        {# ... autres items ... #}
+                    </div>
+                </div>
+                <div class="col-lg-5 align-self-center">
+                    <div class="section-heading">
+                        <h6>À propos de nous</h6>
+                        <h2>Pourquoi utiliser SchoolPrepar ?</h2>
+                        <p>Nous centralisons les informations sur les universités et instituts pour faciliter l'orientation des étudiants au Togo.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# 4. NOS FILIÈRES (DYNAMIQUE) #}
+    <section class="section courses" id="courses">
+        <div class="container">
+            <div class="section-heading text-center">
+                <h6>Nos Filières</h6>
+                <h2>Découvrez les opportunités d'études</h2>
+            </div>
+            <div class="row">
+                {% for filiere in filieres %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="events_item">
+                            <div class="thumb">
+                                {# Alterne les images de 1 à 3 selon la position dans la liste #}
+                                {% set img_idx = (loop.index0 % 3) + 1 %}
+                                <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}">
+                                    <img src="{{ asset('assets/images/course-0' ~ img_idx ~ '.jpg') }}" alt="">
+                                </a>
+                                <span class="category">{{ filiere.domaine }}</span>
+                            </div>
+                            <div class="down-content">
+                                <h4>{{ filiere.nom }}</h4>
+                                <p>{{ filiere.description|slice(0, 100) }}...</p>
+                                <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}" class="text-primary">Lire la suite</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

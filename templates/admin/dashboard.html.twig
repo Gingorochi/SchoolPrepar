@@ -1,0 +1,168 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+{# En-tête avec utilitaires : padding 4, border-bottom #}
+<div class="page-header p-4 border-bottom mb-4">
+    <h1 class="d-flex align-items-center m-0 fw-700">
+        <i class="fas fa-chart-pie me-2 text-primary"></i>Tableau de bord
+    </h1>
+    <p class="text-muted m-0 mt-1 opacity-75">Vue d'ensemble de la plateforme SchoolPrepar</p>
+</div>
+
+{# Statistiques #}
+<div class="row px-4 mb-4">
+    {# Filières #}
+    <div class="col-md-3 mb-3">
+        <div class="bg-white p-4 border rounded shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="p-3 rounded bg-light border">
+                    <i class="fas fa-graduation-cap text-primary"></i>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle p-1 px-2 rounded-pill">
+                    <i class="fas fa-arrow-up me-1"></i>+3
+                </span>
+            </div>
+            <h2 class="m-0 fw-700 h1 text-dark">{{ stats.filieres }}</h2>
+            <p class="text-muted m-0 opacity-75">Filières</p>
+        </div>
+    </div>
+
+    {# Établissements #}
+    <div class="col-md-3 mb-3">
+        <div class="bg-white p-4 border rounded shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="p-3 rounded bg-light border">
+                    <i class="fas fa-school text-warning"></i>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle p-1 px-2 rounded-pill">
+                    <i class="fas fa-arrow-up me-1"></i>+1
+                </span>
+            </div>
+            <h2 class="m-0 fw-700 h1 text-dark">{{ stats.etablissements }}</h2>
+            <p class="text-muted m-0 opacity-75">Établissements</p>
+        </div>
+    </div>
+
+    {# Utilisateurs #}
+    <div class="col-md-3 mb-3">
+        <div class="bg-white p-4 border rounded shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="p-3 rounded bg-light border">
+                    <i class="fas fa-users text-success"></i>
+                </div>
+                <span class="badge bg-success-subtle text-success border border-success-subtle p-1 px-2 rounded-pill">
+                    <i class="fas fa-arrow-up me-1"></i>+12
+                </span>
+            </div>
+            <h2 class="m-0 fw-700 h1 text-dark">{{ stats.utilisateurs ?? 0 }}</h2>
+            <p class="text-muted m-0 opacity-75">Utilisateurs</p>
+        </div>
+    </div>
+
+    {# Visites #}
+    <div class="col-md-3 mb-3">
+        <div class="bg-white p-4 border rounded shadow-sm h-100">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <div class="p-3 rounded bg-light border">
+                    <i class="fas fa-eye text-info"></i>
+                </div>
+            </div>
+            <h2 class="m-0 fw-700 h1 text-dark">—</h2>
+            <p class="text-muted m-0 opacity-75">Visites aujourd'hui</p>
+        </div>
+    </div>
+</div>
+
+{# Tableaux récents #}
+<div class="row px-4">
+    {# Tableau Filières #}
+    <div class="col-lg-6 mb-4">
+        <div class="bg-white border rounded shadow-sm overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between p-4 border-bottom bg-light">
+                <h6 class="m-0 fw-700">Dernières filières</h6>
+                <a href="{{ path('admin_filiere_index') }}" class="btn btn-sm btn-outline-primary border p-1 px-3 rounded">
+                    Voir tout <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table m-0">
+                    <thead class="bg-light">
+                        <tr class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">
+                            <th class="p-3 border-bottom">Nom</th>
+                            <th class="p-3 border-bottom">Domaine</th>
+                            <th class="p-3 border-bottom">Durée</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for filiere in dernieresFilieres %}
+                        <tr>
+                            <td class="p-3 align-middle">
+                                <div class="d-flex align-items-center">
+                                    <div class="p-2 rounded bg-light border me-2 d-flex align-items-center justify-content-center" style="width:35px; height:35px;">
+                                        <i class="fas fa-graduation-cap text-primary" style="font-size:0.8rem;"></i>
+                                    </div>
+                                    <span class="fw-600 text-dark">{{ filiere.nom }}</span>
+                                </div>
+                            </td>
+                            <td class="p-3 align-middle">
+                                <span class="badge bg-light text-primary border p-1 px-2 rounded">{{ filiere.domaine }}</span>
+                            </td>
+                            <td class="p-3 align-middle text-muted">{{ filiere.duree }} ans</td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="p-5 text-center text-muted">Aucune filière</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {# Tableau Etablissements #}
+    <div class="col-lg-6 mb-4">
+        <div class="bg-white border rounded shadow-sm overflow-hidden">
+            <div class="d-flex align-items-center justify-content-between p-4 border-bottom bg-light">
+                <h6 class="m-0 fw-700">Derniers établissements</h6>
+                <a href="{{ path('admin_etablissement_index') }}" class="btn btn-sm btn-outline-primary border p-1 px-3 rounded">
+                    Voir tout <i class="fas fa-arrow-right ms-1"></i>
+                </a>
+            </div>
+            <div class="table-responsive">
+                <table class="table m-0">
+                    <thead class="bg-light">
+                        <tr class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">
+                            <th class="p-3 border-bottom">Nom</th>
+                            <th class="p-3 border-bottom">Ville</th>
+                            <th class="p-3 border-bottom">Filières</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etab in derniersEtablissements %}
+                        <tr>
+                            <td class="p-3 align-middle">
+                                <div class="d-flex align-items-center">
+                                    <div class="p-2 rounded bg-light border me-2 d-flex align-items-center justify-content-center" style="width:35px; height:35px;">
+                                        <i class="fas fa-school text-warning" style="font-size:0.8rem;"></i>
+                                    </div>
+                                    <span class="fw-600 text-dark">{{ etab.nom }}</span>
+                                </div>
+                            </td>
+                            <td class="p-3 align-middle text-muted">{{ etab.ville }}</td>
+                            <td class="p-3 align-middle">
+                                <span class="badge bg-success-subtle text-success border p-1 px-2 rounded">{{ etab.filieres|length }}</span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="3" class="p-5 text-center text-muted">Aucun établissement</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

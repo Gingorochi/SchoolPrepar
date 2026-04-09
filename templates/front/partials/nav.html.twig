@@ -1,0 +1,44 @@
+{# templates/front/partials/_nav.html.twig #}
+
+<header class="header-area header-sticky wow slideInDown" data-wow-duration="0.75s" data-wow-delay="0s">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <nav class="main-nav">
+                    {# ===== LOGO ===== #}
+                    <a href="{{ path('app_home') }}" class="logo">
+                        <h1>School<span>Prepar</span></h1>
+                    </a>
+
+                    {# ===== MENU ===== #}
+                    <ul class="nav">
+                        <li class="scroll-to-section">
+                            <a href="{{ path('app_home') }}" 
+                               class="{% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}">
+                                Accueil
+                            </a>
+                        </li>
+                        <li class="scroll-to-section">
+                            <a href="{{ path('app_filiere_index') }}" 
+                               class="{% if 'app_filiere' in app.request.attributes.get('_route') %}active{% endif %}">
+                                Filières
+                            </a>
+                        </li>
+                        <li class="scroll-to-section">
+                            <a href="{{ path('app_etablissement_index') }}" 
+                               class="{% if 'app_etablissement' in app.request.attributes.get('_route') %}active{% endif %}">
+                                Établissements
+                            </a>
+                        </li>
+                        {# Optionnel : Bouton Contact ou Inscription si prévu dans le template #}
+                        <li class="scroll-to-section"><a href="#contact">Contactez-nous</a></li>
+                    </ul>   
+                    
+                    <a class='menu-trigger'>
+                        <span>Menu</span>
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
