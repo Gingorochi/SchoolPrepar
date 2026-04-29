@@ -2,6 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Repository\FiliereRepository;
+use App\Repository\EtablissementRepository;
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -10,26 +13,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class AdminDashboardController extends AbstractController
 {
     #[Route('', name: 'dashboard')]
-    public function index(): Response
+    public function index(FiliereRepository $filiereRepository, EtablissementRepository $etablissementRepository, UserRepository $userRepository): Response
     {
-        // Stats à remplacer par des requêtes Doctrine ultérieurement
+        // Stats réelles de la base de données
         $stats = [
-            'filieres'       => 4,
-            'etablissements' => 4,
-            'utilisateurs'   => 0,
+            'filieres'       => $filiereRepository->count([]),
+            'etablissements' => $etablissementRepository->count([]),
+            'utilisateurs'   => $userRepository->count([]),
         ];
 
-        $dernieresFilieres = [
-            ['nom' => 'Génie Logiciel', 'domaine' => 'Informatique', 'duree' => 3],
-            ['nom' => 'Réseaux & Télécoms', 'domaine' => 'Informatique', 'duree' => 3],
-            ['nom' => 'Intelligence Artificielle', 'domaine' => 'Data Science', 'duree' => 2],
-        ];
+        // Dernières filières (limitées à 3)
+        $dernieresFilieres = $filiereRepository->findBy([], ['id' => 'DESC'], 3);
 
-        $derniersEtablissements = [
-            ['nom' => 'IP Net Institute', 'ville' => 'Lomé', 'filieres' => [1, 2]],
-            ['nom' => 'Université de Lomé', 'ville' => 'Lomé', 'filieres' => [1, 2, 3]],
-            ['nom' => 'ESTIM', 'ville' => 'Lomé', 'filieres' => [1]],
-        ];
+        // Derniers établissements (limités à 3)
+        $derniersEtablissements = $etablissementRepository->findBy([], ['id' => 'DESC'], 3);
 
         return $this->render('admin/dashboard.html.twig', [
             'stats'                 => $stats,

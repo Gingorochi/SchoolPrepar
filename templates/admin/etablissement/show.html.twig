@@ -1,0 +1,152 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails de l'Établissement{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">Détails de l'établissement : {{ etablissement.nom }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 150px;">Nom</th>
+                                    <td>{{ etablissement.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Ville</th>
+                                    <td>{{ etablissement.ville }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{{ etablissement.type }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{{ etablissement.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>
+                                        {% if etablissement.telephone %}
+                                            {{ etablissement.telephone }}
+                                        {% else %}
+                                            <span class="text-muted">Non renseigné</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>
+                                        {% if etablissement.email %}
+                                            {{ etablissement.email }}
+                                        {% else %}
+                                            <span class="text-muted">Non renseigné</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Adresse</th>
+                                    <td>
+                                        {% if etablissement.adresse %}
+                                            {{ etablissement.adresse }}
+                                        {% else %}
+                                            <span class="text-muted">Non renseignée</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ path('admin_etablissement_edit', {'id': etablissement.id}) }}" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <form method="post" action="{{ path('admin_etablissement_delete', {'id': etablissement.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet établissement ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etablissement.id) }}">
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                        <a href="{{ path('admin_etablissement_index') }}" class="btn btn-secondary">
+                                            <i class="fas fa-list"></i> Retour à la liste
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if etablissement.filieres|length > 0 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Filières proposées par cet établissement</h5>
+                                <div class="row">
+                                    {% for filiere in etablissement.filieres %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">{{ filiere.nom }}</h6>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">{{ filiere.domaine }} - {{ filiere.duree }} an(s)</small>
+                                                    </p>
+                                                    <a href="{{ path('admin_filiere_show', {'id': filiere.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                        Voir détails
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if etablissement.users|length > 0 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Utilisateurs de cet établissement</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Nom</th>
+                                                <th>Prénom</th>
+                                                <th>Email</th>
+                                                <th>Rôle</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for user in etablissement.users %}
+                                                <tr>
+                                                    <td>{{ user.nom }}</td>
+                                                    <td>{{ user.prenom }}</td>
+                                                    <td>{{ user.email }}</td>
+                                                    <td><span class="badge bg-primary">{{ user.role }}</span></td>
+                                                    <td>
+                                                        <a href="{{ path('admin_user_show', {'id': user.id}) }}" class="btn btn-sm btn-outline-info">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

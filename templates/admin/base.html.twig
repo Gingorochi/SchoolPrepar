@@ -8,14 +8,185 @@
     {# Remarque le chemin : assets/admin/... #}
     <link rel="stylesheet" href="{{ asset('assets/admin/css/theme.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/admin/css/bootstrap.css') }}">
+    
+    {# TEST CSS INLINE pour diagnostic #}
+    <style>
+        body {
+            background: #ffffff !important;
+            color: #1a202c !important;
+        }
+        
+        #miniSidebar {
+            background: linear-gradient(180deg, #2d3748 0%, #1a202c 100%) !important;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            height: 100vh !important;
+            width: 280px !important;
+            border-right: 1px solid rgba(0, 0, 0, 0.1) !important;
+            z-index: 1000 !important;
+        }
+        
+        .main-content {
+            margin-left: 280px !important;
+            padding-top: 90px !important;
+        }
+        
+        .stats-card {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            border-radius: 16px !important;
+            padding: 24px !important;
+            margin-bottom: 24px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        .card {
+            background: #ffffff !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            border-radius: 12px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+        }
+        
+        .table {
+            background: #ffffff !important;
+            color: #1a202c !important;
+        }
+        
+        .table td {
+            color: #2d3748 !important;
+            font-weight: 500 !important;
+        }
+        
+        .table th {
+            color: #1a202c !important;
+            font-weight: 700 !important;
+        }
+        
+        .fw-600 {
+            color: #1a202c !important;
+        }
+        
+        .text-muted {
+            color: #718096 !important;
+        }
+        
+        .topbar {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            left: 280px !important;
+            height: 70px !important;
+            background: #ffffff !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0 24px !important;
+            z-index: 999 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        .search-bar {
+            position: relative !important;
+            width: 350px !important;
+        }
+        
+        .search-bar input {
+            width: 100% !important;
+            padding: 12px 16px 12px 45px !important;
+            border: 1px solid rgba(0, 0, 0, 0.2) !important;
+            border-radius: 8px !important;
+            background: #f7fafc !important;
+            color: #1a202c !important;
+            font-size: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .search-bar input:focus {
+            outline: none !important;
+            border-color: #22c55e !important;
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1) !important;
+            background: #ffffff !important;
+        }
+        
+        .search-bar::before {
+            content: 'search' !important;
+            position: absolute !important;
+            left: 16px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color: #718096 !important;
+            font-family: 'Material Icons' !important;
+            font-size: 20px !important;
+        }
+        
+        .logo {
+            padding: 20px !important;
+            text-align: center !important;
+        }
+        
+        .logo h1 {
+            font-size: 24px !important;
+            font-weight: 700 !important;
+            background: linear-gradient(135deg, #22c55e 0%, #3b82f6 100%) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+    </style>
+    
     {% block stylesheets %}{% endblock %}
 </head>
 <body>
-    {# Ta structure avec les includes #}
-    {{ include('admin/partials/aside.html.twig') }}
+    {# Sidebar avec profil utilisateur #}
+    <aside id="miniSidebar">
+        {# Logo #}
+        <div class="logo">
+            <h1>SchoolPrepar</h1>
+            <p>Tableau de bord</p>
+        </div>
+        
+        {# Navigation #}
+        {{ include('admin/partials/aside.html.twig') }}
+        
+        {# Profil utilisateur #}
+        <div class="user-profile">
+            <div class="user-profile-info">
+                <div class="user-profile-avatar">A</div>
+                <div class="user-profile-details">
+                    <div class="user-profile-name">Admin</div>
+                    <div class="user-profile-role">Administrateur</div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    {# Barre supérieure moderne #}
+    <div class="topbar">
+        <div class="search-bar">
+            <input type="text" placeholder="Rechercher..." />
+        </div>
+        <div class="topbar-actions">
+            <div class="notification-btn">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </div>
+            <div class="user-avatar">A</div>
+        </div>
+    </div>
 
     <div class="main-content">
-        {% block body %}{% endblock %}
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ type == 'error' ? 'danger' : type }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        
+        {% block content %}{% endblock %}
     </div>
 
     {# Scripts JS #}

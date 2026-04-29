@@ -1,0 +1,131 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails de l'Utilisateur{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">Détails de l'utilisateur : {{ user.nom }} {{ user.prenom }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 150px;">Nom</th>
+                                    <td>{{ user.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Prénom</th>
+                                    <td>{{ user.prenom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Rôle</th>
+                                    <td><span class="badge bg-{{ user.role == 'administrateur' ? 'danger' : (user.role == 'enseignant' ? 'warning' : 'info') }}">{{ user.role|capitalize }}</span></td>
+                                </tr>
+                                <tr>
+                                    <th>Téléphone</th>
+                                    <td>
+                                        {% if user.telephone %}
+                                            {{ user.telephone }}
+                                        {% else %}
+                                            <span class="text-muted">Non renseigné</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Établissement</th>
+                                    <td>
+                                        <a href="{{ path('admin_etablissement_show', {'id': user.etablissement.id}) }}">
+                                            {{ user.etablissement.nom }}
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Filière</th>
+                                    <td>
+                                        {% if user.filiere %}
+                                            <a href="{{ path('admin_filiere_show', {'id': user.filiere.id}) }}">
+                                                {{ user.filiere.nom }}
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted">Aucune filière</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <form method="post" action="{{ path('admin_user_delete', {'id': user.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                        <a href="{{ path('admin_user_index') }}" class="btn btn-secondary">
+                                            <i class="fas fa-list"></i> Retour à la liste
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if user.evenementsOrganises|length > 0 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Événements organisés par cet utilisateur</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Titre</th>
+                                                <th>Date</th>
+                                                <th>Lieu</th>
+                                                <th>Filière</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for evenement in user.evenementsOrganises %}
+                                                <tr>
+                                                    <td>{{ evenement.titre }}</td>
+                                                    <td>{{ evenement.dateDebut|date('d/m/Y H:i') }}</td>
+                                                    <td>{{ evenement.lieu }}</td>
+                                                    <td>
+                                                        <a href="{{ path('admin_filiere_show', {'id': evenement.filiere.id}) }}">
+                                                            {{ evenement.filiere.nom }}
+                                                        </a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-outline-info">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

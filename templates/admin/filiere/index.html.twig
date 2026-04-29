@@ -1,43 +1,138 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}filieres{% endblock %}
+{% block title %}Gestion des Filières{% endblock %}
 
-{% block body %}
+{% block topbar_title %}Gestion des Filières{% endblock %}
 
-<section class="section courses" id="courses">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <div class="section-heading">
-            <h6>Nos Formations</h6>
-            <h2>Dernières Filières Ajoutées</h2>
-          </div>
+{% block stylesheets %}
+<style>
+/* Correction du positionnement de la sidebar */
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+#miniSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    background: #fff;
+    border-right: 1px solid #e9ecef;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.main-content {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+    padding-top: 140px;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    #miniSidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    #miniSidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# En-tête avec utilitaires #}
+<div class="page-header p-4 border-bottom mb-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="d-flex align-items-center m-0 fw-700">
+                <i class="fas fa-graduation-cap me-2 text-primary"></i>Gestion des Filières
+            </h1>
+            <p class="text-muted m-0 mt-1 opacity-75">Liste de toutes les formations disponibles</p>
         </div>
-      </div>
-      
-      <div class="row event_box">
-        {% for filiere in filieres %}
-        <div class="col-lg-4 col-md-6 align-self-center mb-30 event_outer">
-          <div class="events_item">
-            <div class="thumb">
-              {# On peut mettre une image par défaut ou une image liée à la filière #}
-              <a href="#"><img src="{{ asset('assets/images/course-01.jpg') }}" alt=""></a>
-              <span class="category">{{ filiere.domaine }}</span>
-            </div>
-            <div class="down-content">
-              <span class="author">Durée : {{ filiere.duree }} ans</span>
-              <h4>{{ filiere.nom }}</h4>
-              <p style="font-size: 0.9rem; color: #666;">
-                {{ filiere.description|slice(0, 80) }}...
-              </p>
-            </div>
-          </div>
+        <div>
+            <a href="{{ path('admin_filiere_new') }}" class="btn btn-primary position-fixed" style="position: fixed; top: 100px; right: 20px; z-index: 100;">
+                <i class="fas fa-plus me-2"></i>Ajouter une filière
+            </a>
         </div>
-        {% else %}
-            <p class="text-center">Aucune filière disponible pour le moment.</p>
-        {% endfor %}
-      </div>
     </div>
-</section>
+</div>
+
+{# Tableau des filières #}
+<div class="row px-4">
+    <div class="col-12">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table m-0" style="list-style: none;">
+                    <thead class="bg-light">
+                        <tr class="text-muted" style="font-size: 0.8rem; text-transform: uppercase;">
+                            <th class="p-3 border-bottom">ID</th>
+                            <th class="p-3 border-bottom">Nom</th>
+                            <th class="p-3 border-bottom">Domaine</th>
+                            <th class="p-3 border-bottom">Durée</th>
+                            <th class="p-3 border-bottom">Langue</th>
+                            <th class="p-3 border-bottom text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for filiere in filieres %}
+                        <tr>
+                            <td class="p-3 align-middle">
+                                <span class="badge bg-light text-dark border">{{ filiere.id }}</span>
+                            </td>
+                            <td class="p-3 align-middle">
+                                <div class="d-flex align-items-center">
+                                    <div class="p-2 rounded bg-light border me-3 d-flex align-items-center justify-content-center" style="width:35px; height:35px; flex-shrink: 0;">
+                                        {% if filiere.image %}
+                                            <img src="{{ asset('uploads/filieres/' ~ filiere.image) }}" alt="{{ filiere.nom }}" class="img-fluid rounded" style="max-width: 25px; max-height: 25px;">
+                                        {% else %}
+                                            <i class="fas fa-graduation-cap text-primary"></i>
+                                        {% endif %}
+                                    </div>
+                                    <strong class="ms-2">{{ filiere.nom }}</strong>
+                                </div>
+                            </td>
+                            <td class="p-3 align-middle">
+                                <span class="badge bg-light text-primary border p-1 px-2 rounded">{{ filiere.domaine }}</span>
+                            </td>
+                            <td class="p-3 align-middle text-muted">{{ filiere.duree }} ans</td>
+                            <td class="p-3 align-middle">
+                                <span class="badge bg-success-subtle text-success border">{{ filiere.langue }}</span>
+                            </td>
+                            <td class="p-3 align-middle text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('admin_filiere_edit', {'id': filiere.id}) }}" class="btn btn-sm btn-outline-primary border p-1 px-2 rounded">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="post" action="{{ path('admin_filiere_delete', {'id': filiere.id}) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger border p-1 px-2 rounded" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="6" class="p-5 text-center text-muted">Aucune filière disponible</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 {% endblock %}
 

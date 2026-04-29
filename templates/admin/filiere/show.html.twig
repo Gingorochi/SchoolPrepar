@@ -1,0 +1,134 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Détails de la Filière{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h3 mb-4">Détails de la filière : {{ filiere.nom }}</h1>
+            
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th style="width: 150px;">Nom</th>
+                                    <td>{{ filiere.nom }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Domaine</th>
+                                    <td>{{ filiere.domaine }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Description</th>
+                                    <td>{{ filiere.description }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Durée</th>
+                                    <td>{{ filiere.duree }} an(s)</td>
+                                </tr>
+                                <tr>
+                                    <th>Langue</th>
+                                    <td>{{ filiere.langue }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Image</th>
+                                    <td>
+                                        {% if filiere.image %}
+                                            {{ filiere.image }}
+                                        {% else %}
+                                            <span class="text-muted">Aucune image</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Actions</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ path('admin_filiere_edit', {'id': filiere.id}) }}" class="btn btn-primary">
+                                            <i class="fas fa-edit"></i> Modifier
+                                        </a>
+                                        <form method="post" action="{{ path('admin_filiere_delete', {'id': filiere.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette filière ?');">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ filiere.id) }}">
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="fas fa-trash"></i> Supprimer
+                                            </button>
+                                        </form>
+                                        <a href="{{ path('admin_filiere_index') }}" class="btn btn-secondary">
+                                            <i class="fas fa-list"></i> Retour à la liste
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if filiere.etablissements|length > 0 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Établissements proposant cette filière</h5>
+                                <div class="row">
+                                    {% for etablissement in filiere.etablissements %}
+                                        <div class="col-md-4 mb-3">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h6 class="card-title">{{ etablissement.nom }}</h6>
+                                                    <p class="card-text">
+                                                        <small class="text-muted">{{ etablissement.ville }} - {{ etablissement.type }}</small>
+                                                    </p>
+                                                    <a href="{{ path('admin_etablissement_show', {'id': etablissement.id}) }}" class="btn btn-sm btn-outline-primary">
+                                                        Voir détails
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if filiere.evenements|length > 0 %}
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Événements de cette filière</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Titre</th>
+                                                <th>Date</th>
+                                                <th>Lieu</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for evenement in filiere.evenements %}
+                                                <tr>
+                                                    <td>{{ evenement.titre }}</td>
+                                                    <td>{{ evenement.dateDebut|date('d/m/Y H:i') }}</td>
+                                                    <td>{{ evenement.lieu }}</td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-outline-info">Voir</a>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

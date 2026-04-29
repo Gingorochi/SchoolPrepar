@@ -1,51 +1,109 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}etablissement{% endblock %}
+{% block title %}Établissements{% endblock %}
 
-{% block body %}
+{% block topbar_title %}Établissements{% endblock %}
 
-<div class="section events" id="events">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-12 text-center">
-          <div class="section-heading">
-            <h6>Partenaires</h6>
-            <h2>Établissements d'enseignement</h2>
-          </div>
+{% block stylesheets %}
+<style>
+/* Correction du positionnement de la sidebar */
+body {
+    display: flex;
+    min-height: 100vh;
+}
+
+#miniSidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 280px;
+    background: #fff;
+    border-right: 1px solid #e9ecef;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.main-content {
+    margin-left: 280px;
+    flex: 1;
+    min-height: 100vh;
+    padding-top: 140px;
+}
+
+/* Responsive pour mobile */
+@media (max-width: 768px) {
+    #miniSidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    #miniSidebar.show {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# En-tête avec utilitaires #}
+<div class="page-header p-4 border-bottom mb-2">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="d-flex align-items-center m-0 fw-700">
+                <i class="fas fa-school me-2 text-primary"></i>Établissements d'enseignement
+            </h1>
+            <p class="text-muted m-0 mt-1 opacity-75">Liste de tous les établissements partenaires</p>
         </div>
-        
-        {% for etab in etablissements %}
-        <div class="col-lg-12 col-md-6">
-          <div class="item">
-            <div class="row">
-              <div class="col-lg-3">
-                <div class="image">
-                  <img src="{{ asset('assets/images/event-01.jpg') }}" alt="">
-                </div>
-              </div>
-              <div class="col-lg-9">
-                <ul>
-                  <li>
-                    <span class="category">Université / Institut</span>
-                    <h4>{{ etab.nom }}</h4>
-                  </li>
-                  <li>
-                    <span>Ville:</span>
-                    <h6>{{ etab.ville }}</h6>
-                  </li>
-                  <li>
-                    <span>Contact:</span>
-                    <h6>{{ etab.telephone }}</h6>
-                  </li>
-                </ul>
-                <a href="#"><i class="fa fa-angle-right"></i></a>
-              </div>
-            </div>
-          </div>
+        <div>
+            <a href="{{ path('admin_etablissement_new') }}" class="btn btn-primary position-fixed" style="position: fixed; top: 100px; right: 20px; z-index: 100;">
+                <i class="fas fa-plus me-2"></i>Ajouter un établissement
+            </a>
         </div>
-        {% endfor %}
-      </div>
     </div>
+</div>
+
+{# Liste des établissements #}
+<div class="row px-4">
+    {% for etab in etablissements %}
+    <div class="col-lg-12 mb-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="row align-items-center">
+                    <div class="col-lg-3">
+                        <div class="text-center">
+                            <img src="{{ asset('assets/images/event-01.jpg') }}" alt="{{ etab.nom }}" class="img-fluid rounded" style="max-height: 120px;">
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <ul style="list-style: none; padding: 0; margin: 0;">
+                            <li class="mb-3">
+                                <span class="badge bg-primary bg-opacity-10 text-primary border">Université / Institut</span>
+                                <h4 class="mt-2 mb-0">{{ etab.nom }}</h4>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Ville:</span>
+                                <h6 class="d-inline-block ms-2 mb-0">{{ etab.ville }}</h6>
+                            </li>
+                            <li class="mb-2">
+                                <span class="text-muted">Contact:</span>
+                                <h6 class="d-inline-block ms-2 mb-0">{{ etab.telephone }}</h6>
+                            </li>
+                        </ul>
+                        <a href="#" class="btn btn-sm btn-outline-primary mt-3">
+                            <i class="fas fa-arrow-right me-1"></i>Voir détails
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
 
