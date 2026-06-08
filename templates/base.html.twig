@@ -36,6 +36,23 @@
                     <li class="scroll-to-section"><a href="{{ path('app_filiere_index') }}">Filières</a></li>
                     <li class="scroll-to-section"><a href="{{ path('app_etablissement_index') }}">Établissements</a></li>
                     <li class="scroll-to-section"><a href="#contact">Contact</a></li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="scroll-to-section"><a href="{{ path('admin_dashboard') }}">Administration</a></li>
+                    {% endif %}
+                    {% if app.user %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ app.user.prenom }} {{ app.user.nom }}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="{{ path('app_logout') }}"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="scroll-to-section"><a href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt"></i> Connexion</a></li>
+                        <li class="scroll-to-section"><a href="{{ path('app_register') }}"><i class="fas fa-user-plus"></i> Inscription</a></li>
+                    {% endif %}
                 </ul>   
                 <a class='menu-trigger'><span>Menu</span></a>
             </nav>

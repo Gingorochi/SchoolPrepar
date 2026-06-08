@@ -6,6 +6,7 @@ use App\Repository\FiliereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FiliereRepository::class)]
 class Filiere
@@ -16,22 +17,42 @@ class Filiere
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le nom de la filière est obligatoire')]
+    #[Assert\Length(min: 2, minMessage: 'Le nom doit contenir au moins {{ limit }} caractères', max: 255)]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Le domaine est obligatoire')]
+    #[Assert\Length(min: 2, minMessage: 'Le domaine doit contenir au moins {{ limit }} caractères', max: 100)]
     private ?string $domaine = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'La description est obligatoire')]
+    #[Assert\Length(min: 10, minMessage: 'La description doit contenir au moins {{ limit }} caractères', max: 2000)]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'La durée est obligatoire')]
+    #[Assert\Positive(message: 'La durée doit être un nombre positif')]
+    #[Assert\LessThanOrEqual(10, message: 'La durée ne peut pas dépasser 10 ans')]
     private ?int $duree = null;
 
     #[ORM\Column(length: 100)]
+    #[Assert\NotBlank(message: 'La langue d\'enseignement est obligatoire')]
+    #[Assert\Choice(choices: ['Français', 'Anglais', 'Espagnol', 'Bilingue'], message: 'La langue doit être valide')]
     private ?string $langue = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: 'Le nom du fichier ne peut pas dépasser {{ limit }} caractères')]
     private ?string $image = null;
+
+    #[Assert\File(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+        mimeTypesMessage: 'Veuillez uploader une image valide (jpeg/png/webp/gif).'
+    )]
+    private ?\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile = null;
+
 
     #[ORM\ManyToMany(targetEntity: Etablissement::class, inversedBy: 'filieres')]
     private Collection $etablissements;
@@ -115,6 +136,19 @@ class Filiere
         $this->image = $image;
         return $this;
     }
+
+    public function getImageFile(): ?\Symfony\Component\HttpFoundation\File\UploadedFile
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?\Symfony\Component\HttpFoundation\File\UploadedFile $imageFile): static
+    {
+        $this->imageFile = $imageFile;
+
+        return $this;
+    }
+
 
     /**
      * @return Collection<int, Etablissement>

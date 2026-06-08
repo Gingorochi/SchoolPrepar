@@ -1,0 +1,251 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription - SchoolPrepar{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .login-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin-top: 0;
+    }
+
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        text-align: center;
+    }
+
+    .login-header h4 {
+        color: white;
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .login-header i {
+        font-size: 2rem;
+        margin-right: 10px;
+    }
+
+    .login-body {
+        padding: 40px;
+        background: white;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 15px;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+        color: white;
+    }
+
+    .register-link {
+        color: #667eea;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .register-link:hover {
+        color: #764ba2;
+    }
+
+    .login-icon {
+        color: white;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-8 col-lg-6">
+            <div class="card login-card">
+                <div class="login-header">
+                    <h4><i class="fas fa-user-plus login-icon"></i> Créer un compte</h4>
+                </div>
+                <div class="login-body">
+                    {{ form_start(registrationForm, {'attr': {'class': 'needs-validation'}}) }}
+
+                    {% if not registrationForm.vars.valid %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Veuillez corriger les erreurs dans le formulaire.
+                            <div class="mt-2">{{ form_errors(registrationForm) }}</div>
+                        </div>
+                    {% endif %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(registrationForm.nom, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control' ~ (registrationForm.nom.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                            {% if registrationForm.nom.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.nom) }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(registrationForm.prenom, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control' ~ (registrationForm.prenom.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                            {% if registrationForm.prenom.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.prenom) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control' ~ (registrationForm.email.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                        {% if registrationForm.email.vars.errors|length > 0 %}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.email) }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.telephone, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control' ~ (registrationForm.telephone.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                        {% if registrationForm.telephone.vars.errors|length > 0 %}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.telephone) }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(registrationForm.etablissement, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.etablissement, {'attr': {'class': 'form-control' ~ (registrationForm.etablissement.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                            {% if registrationForm.etablissement.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.etablissement) }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            {{ form_label(registrationForm.filiere, null, {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.filiere, {'attr': {'class': 'form-control' ~ (registrationForm.filiere.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                            {% if registrationForm.filiere.vars.errors|length > 0 %}
+                                <div class="invalid-feedback">
+                                    {{ form_errors(registrationForm.filiere) }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                        {% if registrationForm.plainPassword.vars.errors|length > 0 %}
+                            <div class="invalid-feedback">
+                                {{ form_errors(registrationForm.plainPassword) }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-3">
+                        {{ form_label(registrationForm.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control' ~ (registrationForm.plainPassword.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    </div>
+
+                    <div class="d-grid mt-5">
+                        <button type="submit" class="btn btn-login text-white">
+                            <i class="fas fa-user-plus me-2"></i> S'inscrire
+                        </button>
+                    </div>
+
+                    {{ form_end(registrationForm) }}
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0 text-muted">Déjà un compte ?
+                            <a href="{{ path('app_login') }}" class="register-link text-decoration-none">Se connecter</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

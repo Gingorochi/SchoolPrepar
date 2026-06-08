@@ -1,109 +1,102 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Établissements{% endblock %}
-
-{% block topbar_title %}Établissements{% endblock %}
-
-{% block stylesheets %}
-<style>
-/* Correction du positionnement de la sidebar */
-body {
-    display: flex;
-    min-height: 100vh;
-}
-
-#miniSidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 280px;
-    background: #fff;
-    border-right: 1px solid #e9ecef;
-    z-index: 1000;
-    overflow-y: auto;
-}
-
-.main-content {
-    margin-left: 280px;
-    flex: 1;
-    min-height: 100vh;
-    padding-top: 140px;
-}
-
-/* Responsive pour mobile */
-@media (max-width: 768px) {
-    #miniSidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    #miniSidebar.show {
-        transform: translateX(0);
-    }
-    
-    .main-content {
-        margin-left: 0;
-    }
-}
-</style>
-{% endblock %}
+{% block title %}Gestion des Établissements - SchoolPrepar Admin{% endblock %}
 
 {% block content %}
-
-{# En-tête avec utilitaires #}
-<div class="page-header p-4 border-bottom mb-2">
-    <div class="d-flex justify-content-between align-items-center">
+<div class="page-header mb-32">
+    <div class="d-flex justify-content-between align-items-center mb-24">
         <div>
-            <h1 class="d-flex align-items-center m-0 fw-700">
-                <i class="fas fa-school me-2 text-primary"></i>Établissements d'enseignement
+            <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">
+                Gestion des Établissements
             </h1>
-            <p class="text-muted m-0 mt-1 opacity-75">Liste de tous les établissements partenaires</p>
+            <p style="color: var(--text-muted);">Administrez les établissements partenaires</p>
         </div>
-        <div>
-            <a href="{{ path('admin_etablissement_new') }}" class="btn btn-primary position-fixed" style="position: fixed; top: 100px; right: 20px; z-index: 100;">
-                <i class="fas fa-plus me-2"></i>Ajouter un établissement
-            </a>
-        </div>
+        <a href="{{ path('admin_etablissement_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouvel Établissement
+        </a>
     </div>
 </div>
 
-{# Liste des établissements #}
-<div class="row px-4">
-    {% for etab in etablissements %}
-    <div class="col-lg-12 mb-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-4">
-                <div class="row align-items-center">
-                    <div class="col-lg-3">
-                        <div class="text-center">
-                            <img src="{{ asset('assets/images/event-01.jpg') }}" alt="{{ etab.nom }}" class="img-fluid rounded" style="max-height: 120px;">
-                        </div>
-                    </div>
-                    <div class="col-lg-9">
-                        <ul style="list-style: none; padding: 0; margin: 0;">
-                            <li class="mb-3">
-                                <span class="badge bg-primary bg-opacity-10 text-primary border">Université / Institut</span>
-                                <h4 class="mt-2 mb-0">{{ etab.nom }}</h4>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-muted">Ville:</span>
-                                <h6 class="d-inline-block ms-2 mb-0">{{ etab.ville }}</h6>
-                            </li>
-                            <li class="mb-2">
-                                <span class="text-muted">Contact:</span>
-                                <h6 class="d-inline-block ms-2 mb-0">{{ etab.telephone }}</h6>
-                            </li>
-                        </ul>
-                        <a href="#" class="btn btn-sm btn-outline-primary mt-3">
-                            <i class="fas fa-arrow-right me-1"></i>Voir détails
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="table-container">
+    <div class="card-header">
+        <h5 class="mb-0">Liste des Établissements</h5>
     </div>
-    {% endfor %}
+    <div class="card-body">
+        {% if etablissements|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nom</th>
+                            <th>Ville</th>
+                            <th>Type</th>
+                            <th>Téléphone</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for etab in etablissements %}
+                        <tr>
+                            <td>
+                                <span style="font-weight: 600;">{{ etab.nom }}</span>
+                            </td>
+                            <td>
+                                <span style="color: var(--text-muted);">{{ etab.ville }}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-info">{{ etab.type }}</span>
+                            </td>
+                            <td>
+                                {{ etab.telephone ?? '-' }}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('admin_etablissement_show', {id: etab.id}) }}" class="btn btn-sm btn-primary" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('admin_etablissement_edit', {id: etab.id}) }}" class="btn btn-sm btn-secondary" title="Éditer">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="POST" action="{{ path('admin_etablissement_delete', {id: etab.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ etab.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 48px 24px;">
+                <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 16px; display: block;"></i>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">
+                    Aucun établissement trouvé.
+                </p>
+                <a href="{{ path('admin_etablissement_new') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus"></i> Créer un établissement
+                </a>
+            </div>
+        {% endif %}
+    </div>
 </div>
+
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
 {% endblock %}
 

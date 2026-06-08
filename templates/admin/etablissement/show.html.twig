@@ -12,11 +12,17 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-8">
+                            {% if etablissement.imagePath %}
+                                <div class="mb-3">
+                                    <img src="{{ asset('uploads/etablissements/' ~ etablissement.imagePath) }}" alt="Image de {{ etablissement.nom }}" class="img-fluid" style="max-height: 220px; object-fit: cover; width: 100%;" />
+                                </div>
+                            {% endif %}
                             <table class="table table-bordered">
                                 <tr>
                                     <th style="width: 150px;">Nom</th>
                                     <td>{{ etablissement.nom }}</td>
                                 </tr>
+
                                 <tr>
                                     <th>Ville</th>
                                     <td>{{ etablissement.ville }}</td>

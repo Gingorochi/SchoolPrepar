@@ -1,0 +1,222 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion - SchoolPrepar{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .login-container {
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin-top: 0;
+    }
+
+    .login-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        overflow: hidden;
+        animation: slideUp 0.6s ease-out;
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 30px;
+        text-align: center;
+    }
+
+    .login-header h4 {
+        color: white;
+        font-weight: 700;
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .login-header i {
+        font-size: 2rem;
+        margin-right: 10px;
+    }
+
+    .login-body {
+        padding: 40px;
+        background: white;
+    }
+
+    .form-control {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+
+    .btn-login {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 15px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.5);
+    }
+
+    .btn-login:active {
+        transform: translateY(0);
+    }
+
+    .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 15px;
+    }
+
+    .alert-danger {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a5a 100%);
+        color: white;
+    }
+
+    .alert-info {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+    }
+
+    .register-link {
+        color: #667eea;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .register-link:hover {
+        color: #764ba2;
+    }
+
+    .login-icon {
+        color: white;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.1);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="login-container">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-5 col-lg-4">
+            <div class="card login-card">
+                <div class="login-header">
+                    <h4><i class="fas fa-sign-in-alt login-icon"></i> Connexion</h4>
+                </div>
+                <div class="login-body">
+                    {% if error %}
+                        <div class="alert alert-danger mb-4">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </div>
+                    {% endif %}
+
+                    {% for label, messages in app.flashes %}
+                        {% for message in messages %}
+                            <div class="alert alert-success mb-4">
+                                <i class="fas fa-check-circle me-2"></i> {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
+
+                    {% if admin_missing %}
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Aucun compte admin n'existe encore. Créez-le maintenant.
+                        </div>
+                        <form method="post" action="{{ path('app_create_admin') }}">
+                            <div class="d-grid mb-4">
+                                <button class="btn btn-login text-white" type="submit">
+                                    <i class="fas fa-user-shield me-2"></i> Créer le compte admin
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+
+                    {% if app.user %}
+                        <div class="alert alert-info mb-4">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Vous êtes déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.
+                            <a href="{{ path('app_logout') }}" class="text-white fw-bold ms-2">Se déconnecter</a>
+                        </div>
+                    {% else %}
+                        <form method="post">
+                        <div class="mb-4">
+                            <label for="inputEmail" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Adresse email
+                            </label>
+                            <input type="email" value="{{ last_username }}" name="email" id="inputEmail"
+                                   class="form-control" placeholder="votre.email@example.com" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="inputPassword" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Mot de passe
+                            </label>
+                            <input type="password" name="password" id="inputPassword"
+                                   class="form-control" placeholder="Votre mot de passe" required>
+                        </div>
+
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                        <div class="d-grid mt-5">
+                            <button class="btn btn-login text-white" type="submit">
+                                <i class="fas fa-sign-in-alt me-2"></i> Se connecter
+                            </button>
+                        </div>
+                    </form>
+
+                        <div class="text-center mt-4">
+                            <p class="mb-0 text-muted">Pas encore de compte ?
+                                <a href="{{ path('app_register') }}" class="register-link text-decoration-none">S'inscrire</a>
+                            </p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -7,31 +7,31 @@ use App\Repository\EtablissementRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin', name: 'admin_')]
 class AdminDashboardController extends AbstractController
 {
-    #[Route('', name: 'dashboard')]
+    #[Route('/', name: 'dashboard')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(FiliereRepository $filiereRepository, EtablissementRepository $etablissementRepository, UserRepository $userRepository): Response
     {
         // Stats réelles de la base de données
-        $stats = [
-            'filieres'       => $filiereRepository->count([]),
-            'etablissements' => $etablissementRepository->count([]),
-            'utilisateurs'   => $userRepository->count([]),
-        ];
+        $utilisateurs_count = $userRepository->count([]);
+        $filieres_count = $filiereRepository->count([]);
+        $etablissements_count = $etablissementRepository->count([]);
+        $evenements_count = 0;
 
-        // Dernières filières (limitées à 3)
-        $dernieresFilieres = $filiereRepository->findBy([], ['id' => 'DESC'], 3);
-
-        // Derniers établissements (limités à 3)
-        $derniersEtablissements = $etablissementRepository->findBy([], ['id' => 'DESC'], 3);
+        // Derniers utilisateurs
+        $users = $userRepository->findBy([], ['id' => 'DESC'], 10);
 
         return $this->render('admin/dashboard.html.twig', [
-            'stats'                 => $stats,
-            'dernieresFilieres'     => $dernieresFilieres,
-            'derniersEtablissements'=> $derniersEtablissements,
+            'utilisateurs_count'     => $utilisateurs_count,
+            'filieres_count'         => $filieres_count,
+            'etablissements_count'   => $etablissements_count,
+            'evenements_count'       => $evenements_count,
+            'users'                  => $users,
         ]);
     }
 }

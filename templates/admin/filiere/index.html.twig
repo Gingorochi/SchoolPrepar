@@ -1,57 +1,8 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Gestion des Filières{% endblock %}
-
-{% block topbar_title %}Gestion des Filières{% endblock %}
-
-{% block stylesheets %}
-<style>
-/* Correction du positionnement de la sidebar */
-body {
-    display: flex;
-    min-height: 100vh;
-}
-
-#miniSidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 280px;
-    background: #fff;
-    border-right: 1px solid #e9ecef;
-    z-index: 1000;
-    overflow-y: auto;
-}
-
-.main-content {
-    margin-left: 280px;
-    flex: 1;
-    min-height: 100vh;
-    padding-top: 140px;
-}
-
-/* Responsive pour mobile */
-@media (max-width: 768px) {
-    #miniSidebar {
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-    
-    #miniSidebar.show {
-        transform: translateX(0);
-    }
-    
-    .main-content {
-        margin-left: 0;
-    }
-}
-</style>
-{% endblock %}
+{% block title %}Gestion des Filières - SchoolPrepar Admin{% endblock %}
 
 {% block content %}
-
-{# En-tête avec utilitaires #}
 <div class="page-header p-4 border-bottom mb-2">
     <div class="d-flex justify-content-between align-items-center">
         <div>
@@ -132,7 +83,4 @@ body {
         </div>
     </div>
 </div>
-</div>
-
 {% endblock %}
-

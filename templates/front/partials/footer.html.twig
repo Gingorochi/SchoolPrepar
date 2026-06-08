@@ -1,5 +1,12 @@
-<footer>
+<footer class="tm-footer" style="padding-top: 60px; padding-bottom: 20px;">
+
     <div class="container">
+        {# alignement haut + suppression des espaces inutiles #}
+        <style>
+            footer.tm-footer .row { align-items: flex-start; }
+            footer.tm-footer p { line-height: 1.7; }
+        </style>
+
         <div class="row">
             <div class="col-md-4 mb-4">
                 <h5>School<span style="color: var(--secondary);">Prepar</span></h5>
@@ -16,7 +23,7 @@
             <div class="col-md-3 mb-4">
                 <h5>À propos</h5>
                 <a href="#">Notre mission</a>
-                <a href="#">Contact</a>
+
                 <a href="#">FAQ</a>
             </div>
             <div class="col-md-3 mb-4">
@@ -34,3 +41,4 @@
         </div>
     </div>
 </footer>
+

@@ -1,0 +1,94 @@
+{% extends 'front/base.html.twig' %}
+
+{% block title %}{{ etablissement.nom }} - SchoolPrepar{% endblock %}
+
+{% block body %}
+    {# HERO / BANNIÈRE #}
+    {% if etablissement.imagePath %}
+        <div class="main-banner" id="top" style="background: url('{{ asset('uploads/etablissements/' ~ etablissement.imagePath) }}') center/cover no-repeat;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="header-text">
+                            <span class="category">Établissement partenaire</span>
+                            <h2 style="color: #fff;">{{ etablissement.nom }}</h2>
+                            <p style="color: rgba(255,255,255,0.85);">
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ etablissement.ville }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="main-banner" id="top">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="header-text">
+                            <span class="category">Établissement partenaire</span>
+                            <h2>{{ etablissement.nom }}</h2>
+                            <p>
+                                <i class="fas fa-map-marker-alt me-2"></i>{{ etablissement.ville }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# CONTENU DETAIL #}
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>Description</h3>
+                            <p style="line-height: 1.8;">{{ etablissement.description }}</p>
+
+                            <hr class="my-4">
+
+                            <h4 class="mb-3"><i class="fas fa-building me-2 text-primary"></i>Détails</h4>
+                            <ul class="list-unstyled">
+                                <li class="mb-2"><strong>Type :</strong> {{ etablissement.type }}</li>
+                                <li class="mb-2"><strong>Ville :</strong> {{ etablissement.ville }}</li>
+                                <li class="mb-2"><strong>Téléphone :</strong> {{ etablissement.telephone ?? 'Non renseigné' }}</li>
+                                <li class="mb-2"><strong>Email :</strong> {{ etablissement.email ?? 'Non renseigné' }}</li>
+                                <li class="mb-2"><strong>Adresse :</strong> {{ etablissement.adresse ?? 'Non renseignée' }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card border-secondary h-100">
+                        <div class="card-body">
+                            <h4 class="fw-bold mb-3"><i class="fas fa-graduation-cap me-2 text-primary"></i>Filières</h4>
+
+                            {% if etablissement.filieres|length > 0 %}
+                                <div class="d-grid gap-2">
+                                    {% for filiere in etablissement.filieres %}
+                                        <a class="btn btn-outline-primary" href="{{ path('app_filiere_show', {'id': filiere.id}) }}">
+                                            {{ filiere.nom }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted mb-0">Aucune filière disponible.</p>
+                            {% endif %}
+
+                            <hr class="my-4">
+
+                            <a href="{{ path('app_etablissement_index') }}" class="btn btn-primary w-100">
+                                <i class="fas fa-arrow-left me-2"></i>Retour à la liste
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+

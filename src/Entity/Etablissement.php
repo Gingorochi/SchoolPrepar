@@ -6,6 +6,7 @@ use App\Repository\EtablissementRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EtablissementRepository::class)]
 class Etablissement
@@ -15,25 +16,50 @@ class Etablissement
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: 'Le nom du fichier ne peut pas dépasser {{ limit }} caractères')]
+    private ?string $imagePath = null;
+
+
+    #[Assert\File(
+        maxSize: '5M',
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Format d\'image invalide'
+    )]
+    private $imageFile = null;
+
+
     #[ORM\Column(length: 255)]
+
+    #[Assert\NotBlank(message: 'Le nom de l\'établissement est obligatoire')]
+    #[Assert\Length(min: 3, minMessage: 'Le nom doit contenir au moins {{ limit }} caractères', max: 255)]
     private ?string $nom = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'La ville est obligatoire')]
+    #[Assert\Length(min: 2, minMessage: 'La ville doit contenir au moins {{ limit }} caractères', max: 100)]
     private ?string $ville = null;
 
     #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank(message: 'La description est obligatoire')]
+    #[Assert\Length(min: 10, minMessage: 'La description doit contenir au moins {{ limit }} caractères', max: 1000)]
     private ?string $description = null;
 
     #[ORM\Column(length: 20, nullable: true)]
+    #[Assert\Length(min: 8, max: 20, minMessage: 'Le numéro de téléphone doit contenir au moins {{ limit }} caractères', maxMessage: 'Le numéro de téléphone ne peut pas dépasser {{ limit }} caractères')]
     private ?string $telephone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Email(message: 'L\'adresse email n\'est pas valide')]
     private ?string $email = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(max: 500, maxMessage: 'L\'adresse ne peut pas dépasser {{ limit }} caractères')]
     private ?string $adresse = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank(message: 'Le type d\'établissement est obligatoire')]
+    #[Assert\Choice(choices: ['Université', 'Institut', 'École', 'Centre de formation'], message: 'Le type doit être valide')]
     private ?string $type = null;
 
     #[ORM\ManyToMany(targetEntity: Filiere::class, mappedBy: 'etablissements')]
@@ -52,6 +78,32 @@ class Etablissement
     {
         return $this->id;
     }
+
+    public function getImagePath(): ?string
+    {
+        return $this->imagePath;
+    }
+
+    public function getImageFile()
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile($imageFile): static
+    {
+        $this->imageFile = $imageFile;
+        return $this;
+    }
+
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
+        return $this;
+    }
+
+
+
 
     public function getNom(): ?string
     {

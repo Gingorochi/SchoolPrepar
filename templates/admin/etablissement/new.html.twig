@@ -7,6 +7,7 @@
 {# 3. IMPORTANT : Tout ton contenu DOIT être dans le bloc content #}
 {% block content %}
 <div class="container-fluid">
+
     <div class="row">
         <div class="col-12">
             {# Ici, on change le titre de la page pour ne plus voir "Tableau de bord" #}
@@ -69,7 +70,14 @@
                         {{ form_errors(form.adresse) }}
                     </div>
 
+                    <div class="mb-3">
+                        {{ form_label(form.imageFile) }}
+                        {{ form_widget(form.imageFile) }}
+                        {{ form_errors(form.imageFile) }}
+                    </div>
+
                     <div class="d-flex justify-content-between">
+
                         <a href="{{ path('admin_etablissement_index') }}" class="btn btn-secondary">
                             <i class="fas fa-arrow-left"></i> Retour
                         </a>

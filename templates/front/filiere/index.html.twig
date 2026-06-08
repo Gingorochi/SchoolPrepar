@@ -50,7 +50,11 @@
                 <div class="thumb">
                     {% set img_idx = (loop.index0 % 3) + 1 %}
                     <a href="{{ path('app_filiere_show', {'id': filiere.id}) }}">
-                        <img src="{{ asset('assets/images/course-0' ~ img_idx ~ '.jpg') }}" alt="">
+                        {% if filiere.image is not empty %}
+                            <img src="{{ asset('uploads/filieres/' ~ filiere.image) }}" alt="{{ filiere.nom }}" style="width:100%; height:240px; object-fit:cover;">
+                        {% else %}
+                            <img src="{{ asset('assets/images/course-0' ~ img_idx ~ '.jpg') }}" alt="">
+                        {% endif %}
                     </a>
                     <span class="category">{{ filiere.domaine }}</span>
                 </div>

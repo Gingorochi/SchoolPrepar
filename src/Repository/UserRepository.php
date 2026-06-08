@@ -11,6 +11,16 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+    public function findAdmin(): ?User
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.role = :admin OR u.role = :role_admin')
+            ->setParameter('admin', 'ADMIN')
+            ->setParameter('role_admin', 'ROLE_ADMIN')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);

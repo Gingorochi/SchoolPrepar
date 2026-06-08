@@ -1,323 +1,272 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard - SchoolPrepar Admin{% endblock %}
 
 {% block stylesheets %}
 <style>
-/* Override pour le dashboard avec thème sombre */
-.main-content {
-    padding-top: 90px !important;
-}
-
-/* Animation pour les statistiques */
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+    .dashboard-header {
+        margin-bottom: 32px;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .dashboard-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-primary);
     }
-}
 
-.stats-card {
-    animation: fadeInUp 0.6s ease-out;
-}
+    .dashboard-header p {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
 
-.stats-card:nth-child(2) {
-    animation-delay: 0.1s;
-}
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 24px;
+        margin-bottom: 32px;
+    }
 
-.stats-card:nth-child(3) {
-    animation-delay: 0.2s;
-}
+    .stats-card {
+        background: linear-gradient(135deg, var(--dark-tertiary) 0%, rgba(79, 70, 229, 0.05) 100%);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        transition: all 0.3s;
+    }
 
-.stats-card:nth-child(4) {
-    animation-delay: 0.3s;
-}
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    margin-bottom: 15px;
-}
+    .stats-card:hover {
+        border-color: var(--accent-primary);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 32px rgba(79, 70, 229, 0.2);
+    }
 
-.stats-number {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-}
+    .stats-icon-box {
+        width: 64px;
+        height: 64px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 32px;
+        flex-shrink: 0;
+    }
 
-.stats-label {
-    font-size: 0.875rem;
-    color: #6c757d;
-    font-weight: 500;
-}
+    .stats-icon-box.primary {
+        background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(6, 182, 212, 0.1));
+        color: var(--accent-primary);
+    }
 
-/* Animations */
-.animate-in {
-    animation: fadeIn 0.5s ease-in;
-}
+    .stats-icon-box.success {
+        background: rgba(34, 197, 94, 0.15);
+        color: #86efac;
+    }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+    .stats-icon-box.warning {
+        background: rgba(245, 158, 11, 0.15);
+        color: #fcd34d;
+    }
 
-/* Styles pour les tableaux admin */
-.admin-table {
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    overflow: hidden;
-    margin-bottom: 20px;
-}
+    .stats-icon-box.danger {
+        background: rgba(239, 68, 68, 0.15);
+        color: #fca5a5;
+    }
 
-.admin-table .table {
-    margin: 0;
-}
+    .stats-content h3 {
+        color: var(--text-muted);
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+    }
 
-.admin-table .table th {
-    border-top: none;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: #6c757d;
-    background: #f8f9fa;
-}
+    .stats-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        line-height: 1;
+    }
 
-.admin-table .table td {
-    vertical-align: middle;
-    font-size: 0.9rem;
-    padding: 1rem;
-}
+    .stats-change {
+        font-size: 0.8rem;
+        margin-top: 8px;
+        color: var(--text-muted);
+    }
 
-/* Badges */
-.badge {
-    display: inline-block;
-    padding: 0.25rem 0.4em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-}
+    .stats-change.positive {
+        color: #86efac;
+    }
 
-.bg-primary { background-color: #007bff !important; color: white !important; }
-.bg-success { background-color: #28a745 !important; color: white !important; }
-.bg-warning { background-color: #ffc107 !important; color: #212529 !important; }
-.bg-info { background-color: #17a2b8 !important; color: white !important; }
-.bg-light { background-color: #f8f9fa !important; color: #212529 !important; }
-.bg-white { background-color: #ffffff !important; }
+    .stats-change.negative {
+        color: #fca5a5;
+    }
 
-.text-primary { color: #007bff !important; }
-.text-success { color: #28a745 !important; }
-.text-warning { color: #ffc107 !important; }
-.text-info { color: #17a2b8 !important; }
-.text-dark { color: #343a40 !important; }
-.text-muted { color: #6c757d !important; }
+    /* Table Container */
+    .table-container {
+        background: var(--dark-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+    }
 
-.bg-opacity-10 { opacity: 0.1; }
-.bg-opacity-25 { opacity: 0.25; }
+    .table-container .card-header {
+        background: rgba(79, 70, 229, 0.08);
+        border-bottom: 1px solid var(--border-color);
+        padding: 20px;
+    }
 
-/* Utilities */
-.d-flex { display: flex !important; }
-.align-items-center { align-items: center !important; }
-.justify-content-between { justify-content: space-between !important; }
-.h-100 { height: 100% !important; }
-.position-relative { position: relative !important; }
+    /* Row Animation */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 
-.px-4 { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
-.mb-3 { margin-bottom: 1rem !important; }
-.mb-4 { margin-bottom: 1.5rem !important; }
-.me-1 { margin-right: 0.25rem !important; }
-.me-2 { margin-right: 0.5rem !important; }
-.ms-1 { margin-left: 0.25rem !important; }
+    .stats-card {
+        animation: fadeInUp 0.6s ease-out;
+    }
 
-.fw-600 { font-weight: 600 !important; }
-.fw-700 { font-weight: 700 !important; }
-
-/* Buttons */
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    border-radius: 0.2rem;
-}
-
-.btn-outline-primary {
-    color: #007bff;
-    border-color: #007bff;
-    background-color: transparent;
-    text-decoration: none;
-}
-
-.btn-outline-primary:hover {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
-    text-decoration: none;
-}
-
-/* Border utilities */
-.border { border: 1px solid #dee2e6 !important; }
-.border-bottom { border-bottom: 1px solid #dee2e6 !important; }
-.border-success-subtle { border-color: rgba(40, 167, 69, 0.25) !important; }
+    .stats-card:nth-child(1) { animation-delay: 0.05s; }
+    .stats-card:nth-child(2) { animation-delay: 0.1s; }
+    .stats-card:nth-child(3) { animation-delay: 0.15s; }
+    .stats-card:nth-child(4) { animation-delay: 0.2s; }
 </style>
 {% endblock %}
 
 {% block content %}
+{# Dashboard Header #}
+<div class="dashboard-header">
+    <h1>Bienvenue dans votre tableau de bord</h1>
+    <p>Voici un aperçu de votre plateforme de formation</p>
+</div>
 
-
-{# Statistiques #}
-<div class="row px-4 mb-4">
-    {# Filières #}
-    <div class="col-md-3 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon primary">
-                <i class="fas fa-graduation-cap"></i>
-            </div>
-            <div class="stats-number">{{ stats.filieres }}</div>
-            <div class="stats-label">Filières</div>
+{# Statistics Cards #}
+<div class="stats-grid">
+    {# Total Utilisateurs #}
+    <div class="stats-card">
+        <div class="stats-icon-box primary">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="stats-content">
+            <h3>Utilisateurs</h3>
+            <div class="stats-number">{{ utilisateurs_count ?? 0 }}</div>
             <div class="stats-change positive">
-                <i class="fas fa-arrow-up me-1"></i>+3 cette semaine
+                <i class="fas fa-arrow-up"></i> +12% ce mois
             </div>
         </div>
     </div>
 
-    {# Établissements #}
-    <div class="col-md-3 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon warning">
-                <i class="fas fa-school"></i>
-            </div>
-            <div class="stats-number">{{ stats.etablissements }}</div>
-            <div class="stats-label">Établissements</div>
+    {# Total Filières #}
+    <div class="stats-card">
+        <div class="stats-icon-box success">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <div class="stats-content">
+            <h3>Filières</h3>
+            <div class="stats-number">{{ filieres_count ?? 0 }}</div>
             <div class="stats-change positive">
-                <i class="fas fa-arrow-up me-1"></i>+1 cette semaine
+                <i class="fas fa-arrow-up"></i> +3% ce mois
             </div>
         </div>
     </div>
 
-    {# Utilisateurs #}
-    <div class="col-md-3 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon success">
-                <i class="fas fa-users"></i>
-            </div>
-            <div class="stats-number">{{ stats.utilisateurs ?? 0 }}</div>
-            <div class="stats-label">Utilisateurs</div>
+    {# Total Établissements #}
+    <div class="stats-card">
+        <div class="stats-icon-box warning">
+            <i class="fas fa-building"></i>
+        </div>
+        <div class="stats-content">
+            <h3>Établissements</h3>
+            <div class="stats-number">{{ etablissements_count ?? 0 }}</div>
             <div class="stats-change positive">
-                <i class="fas fa-arrow-up me-1"></i>+12 cette semaine
+                <i class="fas fa-arrow-up"></i> +1% ce mois
             </div>
         </div>
     </div>
 
-    {# Visites #}
-    <div class="col-md-3 mb-3">
-        <div class="stats-card">
-            <div class="stats-icon danger">
-                <i class="fas fa-chart-line"></i>
-            </div>
-            <div class="stats-number">247</div>
-            <div class="stats-label">Visites aujourd'hui</div>
-            <div class="stats-change positive">
-                <i class="fas fa-arrow-up me-1"></i>+18% vs hier
+    {# Événements #}
+    <div class="stats-card">
+        <div class="stats-icon-box danger">
+            <i class="fas fa-calendar"></i>
+        </div>
+        <div class="stats-content">
+            <h3>Événements</h3>
+            <div class="stats-number">{{ evenements_count ?? 0 }}</div>
+            <div class="stats-change negative">
+                <i class="fas fa-arrow-down"></i> -5% ce mois
             </div>
         </div>
     </div>
 </div>
 
-{# Tableaux récents #}
-<div class="row px-4">
-    {# Tableau Filières #}
-    <div class="col-lg-6 mb-4">
-        <div class="card">
+{# Recent Users Table #}
+<div class="row">
+    <div class="col-12">
+        <div class="table-container">
             <div class="card-header">
-                <h6 class="m-0">Dernières filières</h6>
-                <a href="{{ path('admin_filiere_index') }}" class="btn btn-sm btn-primary">
-                    Voir tout <i class="fas fa-arrow-right ms-1"></i>
-                </a>
+                <h5 class="mb-0">Utilisateurs récents</h5>
             </div>
-            <div class="table-responsive">
-                <table class="table">
+            <div class="card-body">
+                <table class="table table-hover">
                     <thead>
                         <tr>
                             <th>Nom</th>
-                            <th>Domaine</th>
-                            <th>Durée</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for filiere in dernieresFilieres %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="stats-icon primary me-3" style="width: 32px; height: 32px; font-size: 14px;">
-                                        <i class="fas fa-graduation-cap"></i>
+                        {% if users is defined and users|length > 0 %}
+                            {% for user in users[:5] %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div style="width: 32px; height: 32px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem;">
+                                            {{ user.prenom[0:1]|upper }}
+                                        </div>
+                                        <span>{{ user.prenom }} {{ user.nom }}</span>
                                     </div>
-                                    <span class="fw-600">{{ filiere.nom }}</span>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge badge-primary">{{ filiere.domaine }}</span>
-                            </td>
-                            <td class="text-muted">{{ filiere.duree }} ans</td>
-                        </tr>
+                                </td>
+                                <td>{{ user.email }}</td>
+                                <td>
+                                    <span class="badge {% if user.role == 'ADMIN' %}badge-danger{% else %}badge-info{% endif %}">
+                                        {{ user.role == 'ADMIN' ? 'Administrateur' : 'Utilisateur' }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">Actif</span>
+                                </td>
+                                <td>
+                                    <a href="{{ path('admin_user_show', {id: user.id}) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
                         {% else %}
-                        <tr><td colspan="3" class="text-center text-muted">Aucune filière</td></tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    {# Tableau Etablissements #}
-    <div class="col-lg-6 mb-4">
-        <div class="card">
-            <div class="card-header">
-                <h6 class="m-0">Derniers établissements</h6>
-                <a href="{{ path('admin_etablissement_index') }}" class="btn btn-sm btn-primary">
-                    Voir tout <i class="fas fa-arrow-right ms-1"></i>
-                </a>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nom</th>
-                            <th>Ville</th>
-                            <th>Filières</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for etab in derniersEtablissements %}
-                        <tr>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="stats-icon warning me-3" style="width: 32px; height: 32px; font-size: 14px;">
-                                        <i class="fas fa-school"></i>
-                                    </div>
-                                    <span class="fw-600">{{ etab.nom }}</span>
-                                </div>
-                            </td>
-                            <td class="text-muted">{{ etab.ville }}</td>
-                            <td>
-                                <span class="badge badge-success">{{ etab.filieres|length }}</span>
-                            </td>
-                        </tr>
-                        {% else %}
-                        <tr><td colspan="3" class="text-center text-muted">Aucun établissement</td></tr>
-                        {% endfor %}
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    <i class="fas fa-inbox"></i> Aucun utilisateur
+                                </td>
+                            </tr>
+                        {% endif %}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

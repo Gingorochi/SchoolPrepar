@@ -1,77 +1,148 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Nouvelle Filière{% endblock %}
+{% block title %}Nouvelle Filière - SchoolPrepar Admin{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .form-header {
+        margin-bottom: 32px;
+    }
+    
+    .form-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+        color: var(--text-primary);
+    }
+    
+    .form-header p {
+        color: var(--text-muted);
+    }
+    
+    .form-container {
+        background: var(--dark-tertiary);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 800px;
+    }
+    
+    .form-group {
+        margin-bottom: 24px;
+    }
+    
+    .form-group label {
+        display: block;
+        color: var(--text-primary);
+        font-weight: 600;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px 14px;
+        background: var(--dark-secondary);
+        border: 1px solid var(--border-color);
+        color: var(--text-primary);
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        outline: none;
+        border-color: var(--accent-primary);
+        background: rgba(79, 70, 229, 0.05);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .form-group textarea {
+        resize: vertical;
+        min-height: 120px;
+    }
+    
+    .form-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 16px;
+        margin-top: 32px;
+        padding-top: 24px;
+        border-top: 1px solid var(--border-color);
+    }
+    
+    .form-actions .btn {
+        flex: 1;
+    }
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="h3 mb-4">Créer une nouvelle filière</h1>
-            
-            <div class="card">
-                <div class="card-body">
-                    {{ form_start(form) }}
-                    
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form_label(form.nom) }}
-                                {{ form_widget(form.nom) }}
-                                {{ form_errors(form.nom) }}
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                {{ form_label(form.domaine) }}
-                                {{ form_widget(form.domaine) }}
-                                {{ form_errors(form.domaine) }}
-                            </div>
-                        </div>
-                    </div>
+<div class="form-header">
+    <h1>Créer une nouvelle filière</h1>
+    <p>Remplissez les informations ci-dessous pour créer une filière</p>
+</div>
 
-                    <div class="mb-3">
-                        {{ form_label(form.description) }}
-                        {{ form_widget(form.description) }}
-                        {{ form_errors(form.description) }}
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form_label(form.duree) }}
-                                {{ form_widget(form.duree) }}
-                                {{ form_errors(form.duree) }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form_label(form.langue) }}
-                                {{ form_widget(form.langue) }}
-                                {{ form_errors(form.langue) }}
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                {{ form_label(form.image) }}
-                                {{ form_widget(form.image) }}
-                                {{ form_errors(form.image) }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ path('admin_filiere_index') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Retour
-                        </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Créer la filière
-                        </button>
-                    </div>
-
-                    {{ form_end(form) }}
-                </div>
+<div class="form-container">
+    {{ form_start(form) }}
+    
+    <div class="form-group">
+        {{ form_label(form.nom, 'Nom de la filière') }}
+        {{ form_widget(form.nom, {'attr': {'placeholder': 'Ex: Informatique Appliquée'}}) }}
+        {% if form.nom.vars.errors|length > 0 %}
+            <div style="color: #fca5a5; font-size: 0.85rem; margin-top: 4px;">
+                {% for error in form.nom.vars.errors %}
+                    {{ error.message }}
+                {% endfor %}
             </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            {{ form_label(form.domaine, 'Domaine') }}
+            {{ form_widget(form.domaine, {'attr': {'placeholder': 'Ex: Technologie'}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.langue, 'Langue') }}
+            {{ form_widget(form.langue, {'attr': {'placeholder': 'Ex: Français'}}) }}
         </div>
     </div>
+    
+    <div class="form-row">
+        <div class="form-group">
+            {{ form_label(form.duree, 'Durée (en mois)') }}
+            {{ form_widget(form.duree, {'attr': {'type': 'number', 'placeholder': '12'}}) }}
+        </div>
+        <div class="form-group">
+            {{ form_label(form.image, 'Image') }}
+            {{ form_widget(form.image) }}
+        </div>
+    </div>
+    
+    <div class="form-group">
+        {{ form_label(form.description, 'Description') }}
+        {{ form_widget(form.description, {'attr': {'placeholder': 'Description détaillée de la filière...'}}) }}
+    </div>
+    
+    <div class="form-actions">
+        <a href="{{ path('admin_filiere_index') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Annuler
+        </a>
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Créer la filière
+        </button>
+    </div>
+    
+    {{ form_end(form) }}
 </div>
 {% endblock %}

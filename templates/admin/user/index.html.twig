@@ -1,87 +1,115 @@
 {% extends 'admin/base.html.twig' %}
 
-{% block title %}Gestion des Utilisateurs{% endblock %}
+{% block title %}Gestion des Utilisateurs - SchoolPrepar Admin{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h1 class="h3 mb-0">Gestion des Utilisateurs</h1>
-                <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
-                    <i class="fas fa-plus"></i> Ajouter un utilisateur
-                </a>
-            </div>
-            
-            <div class="card">
-                <div class="card-body">
-                    {% if users|length > 0 %}
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Prénom</th>
-                                        <th>Email</th>
-                                        <th>Rôle</th>
-                                        <th>Établissement</th>
-                                        <th>Filière</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for user in users %}
-                                        <tr>
-                                            <td>{{ user.nom }}</td>
-                                            <td>{{ user.prenom }}</td>
-                                            <td>{{ user.email }}</td>
-                                            <td>
-                                                <span class="badge bg-{{ user.role == 'administrateur' ? 'danger' : (user.role == 'enseignant' ? 'warning' : 'info') }}">
-                                                    {{ user.role|capitalize }}
-                                                </span>
-                                            </td>
-                                            <td>{{ user.etablissement.nom }}</td>
-                                            <td>
-                                                {% if user.filiere %}
-                                                    {{ user.filiere.nom }}
-                                                {% else %}
-                                                    <span class="text-muted">-</span>
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <div class="btn-group btn-group-sm">
-                                                    <a href="{{ path('admin_user_show', {'id': user.id}) }}" class="btn btn-outline-info" title="Voir">
-                                                        <i class="fas fa-eye"></i>
-                                                    </a>
-                                                    <a href="{{ path('admin_user_edit', {'id': user.id}) }}" class="btn btn-outline-primary" title="Modifier">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form method="post" action="{{ path('admin_user_delete', {'id': user.id}) }}" style="display: inline;">
-                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                                                        <button type="submit" class="btn btn-outline-danger" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                    {% else %}
-                        <div class="text-center py-4">
-                            <i class="fas fa-users fa-3x text-muted mb-3"></i>
-                            <h5>Aucun utilisateur trouvé</h5>
-                            <p class="text-muted">Commencez par ajouter un nouvel utilisateur.</p>
-                            <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Ajouter un utilisateur
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
+<div class="page-header mb-32">
+    <div class="d-flex justify-content-between align-items-center mb-24">
+        <div>
+            <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">
+                Gestion des Utilisateurs
+            </h1>
+            <p style="color: var(--text-muted);">Administrez tous les utilisateurs de la plateforme</p>
         </div>
+        <a href="{{ path('admin_user_new') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Nouvel Utilisateur
+        </a>
     </div>
 </div>
+
+<div class="table-container">
+    <div class="card-header">
+        <h5 class="mb-0">Liste des Utilisateurs</h5>
+    </div>
+    <div class="card-body">
+        {% if users|length > 0 %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Utilisateur</th>
+                            <th>Email</th>
+                            <th>Rôle</th>
+                            <th>Établissement</th>
+                            <th>Filière</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div style="width: 36px; height: 36px; background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; font-size: 0.85rem;">
+                                        {{ user.prenom[0:1]|upper }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600;">{{ user.prenom }} {{ user.nom }}</div>
+                                        <div style="font-size: 0.85rem; color: var(--text-muted);">{{ user.telephone ?? '-' }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {{ user.email }}
+                            </td>
+                            <td>
+                                <span class="badge {% if user.role == 'ADMIN' or user.role == 'ROLE_ADMIN' %}badge-danger{% else %}badge-info{% endif %}">
+                                    {{ user.role == 'ADMIN' or user.role == 'ROLE_ADMIN' ? 'Admin' : 'Utilisateur' }}
+                                </span>
+                            </td>
+                            <td>
+                                {{ user.etablissement ? user.etablissement.nom : '-' }}
+                            </td>
+                            <td>
+                                {{ user.filiere ? user.filiere.nom : '-' }}
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="{{ path('admin_user_show', {id: user.id}) }}" class="btn btn-sm btn-primary" title="Voir">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a href="{{ path('admin_user_edit', {id: user.id}) }}" class="btn btn-sm btn-secondary" title="Éditer">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form method="POST" action="{{ path('admin_user_delete', {id: user.id}) }}" style="display: inline;" onsubmit="return confirm('Êtes-vous sûr ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Supprimer">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 48px 24px;">
+                <i class="fas fa-inbox" style="font-size: 3rem; color: var(--text-muted); opacity: 0.5; margin-bottom: 16px; display: block;"></i>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">
+                    Aucun utilisateur trouvé.
+                </p>
+                <a href="{{ path('admin_user_new') }}" class="btn btn-primary mt-3">
+                    <i class="fas fa-plus"></i> Créer un utilisateur
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+    .page-header {
+        margin-bottom: 32px;
+    }
+    
+    .btn-group {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
+</style>
 {% endblock %}
